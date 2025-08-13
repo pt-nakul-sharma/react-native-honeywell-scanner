@@ -29,7 +29,7 @@ buildscript {
             mavenCentral()
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:4.1.1'
+            classpath 'com.android.tools.build:gradle:8.2.2'
         }
     }
 }
@@ -37,12 +37,12 @@ buildscript {
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-// Matches values in recent template from React Native 0.70
-// https://github.com/facebook/react-native/blob/0.70-stable/template/android/build.gradle#L5-L9
-def DEFAULT_COMPILE_SDK_VERSION = 31
-def DEFAULT_BUILD_TOOLS_VERSION = "31.0.0"
+// Updated for Android 15 (API level 35) compatibility
+// Matches values for modern React Native with Android 15 support
+def DEFAULT_COMPILE_SDK_VERSION = 35
+def DEFAULT_BUILD_TOOLS_VERSION = "35.0.0"
 def DEFAULT_MIN_SDK_VERSION = 21
-def DEFAULT_TARGET_SDK_VERSION = 31
+def DEFAULT_TARGET_SDK_VERSION = 35
 
 android {
     compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
@@ -56,6 +56,13 @@ android {
     lintOptions {
         abortOnError false
     }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    
+    namespace 'com.ami3go.honeywellscannerinterface'
 }
 
 repositories {
@@ -84,24 +91,22 @@ dependencies {
     // ref:
     // https://github.com/facebook/react-native/blob/0.61-stable/template/android/app/build.gradle#L192
     //noinspection GradleDynamicVersion
-    implementation 'com.facebook.react:react-native:+'  // From node_modules
+    compileOnly 'com.facebook.react:react-native:+'  // From node_modules
 }
 
 def configureReactNativePom(def pom) {
-    def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-
     pom.project {
-        name packageJson.title
-        artifactId packageJson.name
-        version = packageJson.version
+        name "React Native Honeywell Scanner-v2"
+        artifactId "react-native-honeywell-scanner-v2"
+        version = "1.1.6"
         group = "com.ami3go.honeywellscannerinterface"
-        description packageJson.description
-        url packageJson.repository.baseUrl
+        description "Bridge to use the Honeywell scanner"
+        url "https://github.com/AMI3GOLtd/react-native-honeywell-scanner.git"
 
         licenses {
             license {
-                name packageJson.license
-                url packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
+                name "MIT"
+                url "https://github.com/AMI3GOLtd/react-native-honeywell-scanner.git/blob/master/LICENSE"
                 distribution 'repo'
             }
         }
@@ -120,12 +125,12 @@ afterEvaluate { project ->
     }
 
     task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
-        classifier = 'javadoc'
+        archiveClassifier = 'javadoc'
         from androidJavadoc.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
+        archiveClassifier = 'sources'
         from android.sourceSets.main.java.srcDirs
         include '**/*.java'
     }
