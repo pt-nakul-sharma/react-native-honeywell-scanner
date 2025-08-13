@@ -1,4 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ami3go.honeywellscannerinterface">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Honeywell scanner permission -->
     <uses-permission android:name="com.honeywell.decode.permission.DECODE" />
+    
+    <!-- Android 15 compatibility: Explicit permission for foreground service types if needed -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
+    <!-- Android 15: Declare queries for app visibility if scanning apps need to detect Honeywell services -->
+    <queries>
+        <package android:name="com.honeywell.barcodereader" />
+    </queries>
 </manifest>
