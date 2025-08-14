@@ -7,8 +7,19 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "tsc"
+		"build": "tsc",
+		"prepublishOnly": "yarn run build",
+		"clean": "rm -rf dist",
+		"rebuild": "yarn run clean && yarn run build",
+		"watch": "tsc --watch"
 	},
+	"files": [
+		"dist",
+		"android",
+		"ios",
+		"README.md",
+		"package.json"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/AMI3GOLtd/react-native-honeywell-scanner.git",
@@ -35,6 +46,9 @@
 	},
 	"devDependencies": {
 		"react": "18.*",
-		"react-native": "0.*"
+		"react-native": "0.*",
+		"typescript": "^4.9.5",
+		"@types/react": "^18.0.0",
+		"@types/react-native": "^0.72.0"
 	}
 }
